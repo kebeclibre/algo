@@ -5,21 +5,25 @@ import time
 counter = 0
 def main():	
 	# Un tableau connu non-aléatoire
-	# badExample=[1, 0, 1, 2, 0, 0] -- FIXED !! probleme etait dans les débuts et fins des sous-tableaux
+	badExample=[1, 0, 1, 2, 0, 0] # -- FIXED !! probleme etait dans les débuts et fins des sous-tableaux
 	Custom=[5,6,7,7,8,9,9,9,9,9,9]
 	random.shuffle(Custom)
-	
+	#print(majCorrected(Custom))
+	#print(majCorrected(badExample))
 	# Construction du tableau aléatoire (taille,valeurMin,valeurMax)
 	# Et on l'affiche
-	tableToCheck=randomTABLE(100,0,1000)
+	tableToCheck=randomTABLE(5,0,4)
 	print(tableToCheck)
-	
+	print(majCorrected(tableToCheck))
 	# DEBUG
 	# print(Exo(Custom,Custom))
 	
 	# On tri le tableau aléatoire
 	#start=time.time()
-	print(quickSortCustom(tableToCheck))
+	
+	#quickSortCorrected(tableToCheck)
+	#print(tableToCheck)
+
 	#end=time.time()
 	# T(1000000)=34s
 	# Avec 1263777 appels à la fonction en récursion
@@ -33,21 +37,55 @@ def main():
 
 	# on vérifie s'il est majoritaire sans le trier
 	
-	print(majoritaire(tableToCheck))
+	#print(majoritaire(tableToCheck))
 	#global counter
 	#print counter
 	
 	#duration=end-start
 	#print duration
 	#print(time.clock())
+	
+	
+def swap(table,i,j):
+	temp=table[j]
+	table[j]=table[i]
+	table[i]=temp
 
+def partition(table,debut,fin):
+	pivot=table[debut]
+	p=debut
+	g=fin
+	e=debut
+	i=debut + 1
 
-
+	# Passage de comparaison à la REFerence
+	while i < g:
+		if table[i] > pivot:
+			g -= 1
+			swap(table,i,g)
+		elif table[i]==pivot:
+			i += 1
+		else:
+			swap(table,i,e)
+			i += 1
+			e += 1
+	return (e, g)
+	
+def qsAux(table,debut,fin):
+	if (debut < fin):
+		(e,g) = partition(table,debut,fin)
+		qsAux(table,debut,e)
+		qsAux(table,g,fin)
+		
+def quickSortCorrected(table):
+	qsAux(table,0,len(table))
+		
+	
 def randomTABLE(size,valMin,valMax):
 	result = []
 	i=0
-	while i <= size-1:
-		result.insert(i,random.randint(valMin,valMax))
+	while i < size:
+		result.append(random.randrange(valMin,valMax))
 		i += 1
 	return result
 
@@ -62,8 +100,29 @@ def construcTable(TABLE,a,z):
 		a += 1
 	return AUX
 
+def majCorrected(table):
+	return majAux(table,0,len(table),len(table) // 2 +1)
+	
+def majAux(table,debut,fin,tailleRef):
+	#if debut < fin:
+		print(tailleRef)
 
-def majoritaire(TABLE,KEEP=[]):
+		(e,g)=partition(table,debut,fin)
+
+		if g-e >= tailleRef:
+			print("egaux")
+			return (True,table[e])
+		elif e >= tailleRef:
+			print("petits")
+			return majAux(table,debut,e,tailleRef)
+		elif fin-g >= tailleRef:
+			print("grands")
+			return majAux(table,g,fin,tailleRef)
+		else:
+			return (False,False)
+	
+
+def majoritaire(table,KEEP=[]):
 	# print KEEP
 	REF=TABLE[0]
 	# Nous avons besoin de la taille des sous tableaux (TABLE) pour les substitions dans leurs index
@@ -145,7 +204,7 @@ def majoritaire(TABLE,KEEP=[]):
 	else:
 		return (False,False)
 
-
+# Deprecated
 def quickSortCustom(TABLE):
 	global counter
 	counter += 1
