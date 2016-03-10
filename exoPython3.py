@@ -5,26 +5,27 @@ import time
 counter = 0
 def main():	
 	# Un tableau connu non-aléatoire
-	badExample=[1, 0, 1, 2, 0, 0] # -- FIXED !! probleme etait dans les débuts et fins des sous-tableaux
-	Custom=[5,6,7,7,8,9,9,9,9,9,9]
-	random.shuffle(Custom)
+	#badExample=[1, 0, 1, 2, 0, 0] # -- FIXED !! probleme etait dans les débuts et fins des sous-tableaux
+	#Custom=[5,6,7,7,8,9,9,9,9,9,9]
+	#random.shuffle(Custom)
 	#print(majCorrected(Custom))
 	#print(majCorrected(badExample))
 	# Construction du tableau aléatoire (taille,valeurMin,valeurMax)
 	# Et on l'affiche
-	tableToCheck=randomTABLE(5,0,4)
+	tableToCheck=randomTABLE(1000000,0,1000000)
 	print(tableToCheck)
-	print(majCorrected(tableToCheck))
+	#print(majCorrected(tableToCheck))
 	# DEBUG
 	# print(Exo(Custom,Custom))
 	
 	# On tri le tableau aléatoire
 	#start=time.time()
-	
-	#quickSortCorrected(tableToCheck)
-	#print(tableToCheck)
-
-	#end=time.time()
+	start=time.time()
+	quickSortCorrected(tableToCheck)
+	print(tableToCheck)
+	end=time.time()
+ 	
+	# BENCHMARK : FONCTIONS NON CORRIGEES QS
 	# T(1000000)=34s
 	# Avec 1263777 appels à la fonction en récursion
 	# n*ln (n) = 14*10^6
@@ -34,15 +35,23 @@ def main():
 	# n*ln (n) = 1,1*10^6
 	# occupe 6Mo
 	
-
+	# BENCHMARK: FONCTIONS CORRIGEES QS
+	# T(100000) = 3,2 s
+	# 190000 appels recursifs
+	# Occupe 5Mo
+	# T(1000000)=34s
+	# 1264177 appels
+	# Occupe 19Mo
+	
+	
 	# on vérifie s'il est majoritaire sans le trier
 	
 	#print(majoritaire(tableToCheck))
-	#global counter
-	#print counter
+	global counter
+	print(counter)
 	
-	#duration=end-start
-	#print duration
+	duration=end-start
+	print(duration)
 	#print(time.clock())
 	
 	
@@ -72,6 +81,8 @@ def partition(table,debut,fin):
 	return (e, g)
 	
 def qsAux(table,debut,fin):
+	global counter
+	counter += 1
 	if (debut < fin):
 		(e,g) = partition(table,debut,fin)
 		qsAux(table,debut,e)
@@ -110,19 +121,19 @@ def majAux(table,debut,fin,tailleRef):
 		(e,g)=partition(table,debut,fin)
 
 		if g-e >= tailleRef:
-			print("egaux")
+			#print("egaux")
 			return (True,table[e])
 		elif e >= tailleRef:
-			print("petits")
+			#print("petits")
 			return majAux(table,debut,e,tailleRef)
 		elif fin-g >= tailleRef:
-			print("grands")
+			#print("grands")
 			return majAux(table,g,fin,tailleRef)
 		else:
 			return (False,False)
 	
 
-def majoritaire(table,KEEP=[]):
+def majoritaire(TABLE,KEEP=[]):
 	# print KEEP
 	REF=TABLE[0]
 	# Nous avons besoin de la taille des sous tableaux (TABLE) pour les substitions dans leurs index
