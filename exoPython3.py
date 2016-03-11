@@ -5,23 +5,30 @@ import time
 from compteurdebug import BenchMark
 
 bench=1
+DEBUG=0
+benches=[]
 
-def toBench(status,name):
-	if name == "qs":
-		toBenchAuxQs(status)
-	elif name == "maj":
-		toBenchAuxMaj(status)
+def debug(message):
+	global DEBUG
+	if DEBUG == 1:
+		print(message)
 
-def toBenchAuxQs(status):
+def toBench(status,index):
+	#if name == "qs":
+	toBenchAuxQs(status,index)
+	#elif name == "maj":
+	#	toBenchAuxMaj(status,index)
+
+def toBenchAuxQs(status,index):
 	global bench
-	global benchQs
+	global benches
 	if bench == 1: 
 		if status == 1:
-			benchQs = BenchMark()
+			benches[index] = BenchMark()
 		elif status == 0 :
-			benchQs.stop()
+			benches[index].stop()
 		elif status == 2:
-			benchQs.increment()	
+			benchQs[index].increment()	
 			
 def toBenchAuxMaj(status):
 	global bench
@@ -55,10 +62,10 @@ def main():
 	# On tri le tableau aléatoire
 	#start=time.time()
 	
-	toBench(1,"qs")	
+	toBench(1,0)	
 	quickSortCorrected(tableToCheck)
 	print(tableToCheck)
-	toBench(0,"qs")
+	toBench(0,0)
 	
 	print(majCorrected(tableToCheck))
  	
@@ -107,7 +114,7 @@ def partition(table,debut,fin):
 	return (e, g)
 	
 def qsAux(table,debut,fin):
-	toBench(2,"qs")
+	toBench(2,0)
 	if (debut < fin):
 		(e,g) = partition(table,debut,fin)
 		qsAux(table,debut,e)
@@ -140,24 +147,24 @@ def majCorrected(table):
 	return majAux(table,0,len(table),len(table) // 2 +1)
 	
 def majAux(table,debut,fin,tailleRef):
-		# print(tailleRef)
+		debug(tailleRef)
 		(e,g)=partition(table,debut,fin)
 
 		if g-e >= tailleRef:
-			#print("egaux")
+			debug("egaux")
 			return (True,table[e])
 		elif e >= tailleRef:
-			#print("petits")
+			debug("petits")
 			return majAux(table,debut,e,tailleRef)
 		elif fin-g >= tailleRef:
-			#print("grands")
+			debug("grands")
 			return majAux(table,g,fin,tailleRef)
 		else:
 			return (False,False)
 	
 
 def majoritaire(TABLE,KEEP=[]):
-	# print KEEP
+	debug(KEEP)
 	REF=TABLE[0]
 	# Nous avons besoin de la taille des sous tableaux (TABLE) pour les substitions dans leurs index
 	size=len(TABLE)
@@ -177,7 +184,7 @@ def majoritaire(TABLE,KEEP=[]):
 		halfSizeKeep=int(sizeToKeep/2)
 
 	# DEBUG	
-	# print(halfSizeKeep)
+	debug(halfSizeKeep)
 	p=0
 	g=size
 	e=0
