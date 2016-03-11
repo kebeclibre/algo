@@ -4,15 +4,37 @@ import random
 import time
 from compteurdebug import BenchMark
 
-def checkBench():
-	try:
-		benchQs
-	except NameError:
-		isBench = False
-	else:
-		isBench = True
-		benchQs.increment()
+bench=1
 
+def toBench(status,name):
+	if name == "qs":
+		toBenchAuxQs(status)
+	elif name == "maj":
+		toBenchAuxMaj(status)
+
+def toBenchAuxQs(status):
+	global bench
+	global benchQs
+	if bench == 1: 
+		if status == 1:
+			benchQs = BenchMark()
+		elif status == 0 :
+			benchQs.stop()
+		elif status == 2:
+			benchQs.increment()	
+			
+def toBenchAuxMaj(status):
+	global bench
+	global benchMaj
+	if bench == 1: 
+		if status == 1:
+			benchMaj = BenchMark()
+		elif status == 0 :
+			benchMaj.stop()
+		elif status == 2:
+			benchMaj.increment()			
+	
+		
 def main():	
 	# Un tableau connu non-aléatoire
 	#badExample=[1, 0, 1, 2, 0, 0] # -- FIXED !! probleme etait dans les débuts et fins des sous-tableaux
@@ -28,16 +50,15 @@ def main():
 	# DEBUG
 	# print(Exo(Custom,Custom))
 	
-	print(majCorrected(tableToCheck))
+	#print(majCorrected(tableToCheck))
 	
 	# On tri le tableau aléatoire
 	#start=time.time()
-	global benchQs
-	benchQs = BenchMark()
 	
+	toBench(1,"qs")	
 	quickSortCorrected(tableToCheck)
 	print(tableToCheck)
-	benchQs.stop()
+	toBench(0,"qs")
 	
 	print(majCorrected(tableToCheck))
  	
@@ -86,8 +107,7 @@ def partition(table,debut,fin):
 	return (e, g)
 	
 def qsAux(table,debut,fin):
-	#global benchQs
-	checkBench()
+	toBench(2,"qs")
 	if (debut < fin):
 		(e,g) = partition(table,debut,fin)
 		qsAux(table,debut,e)
