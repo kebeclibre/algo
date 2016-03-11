@@ -2,7 +2,17 @@
 # -*-coding:UTF-8 -*
 import random
 import time
-counter = 0
+from compteurdebug import BenchMark
+
+def checkBench():
+	try:
+		benchQs
+	except NameError:
+		isBench = False
+	else:
+		isBench = True
+		benchQs.increment()
+
 def main():	
 	# Un tableau connu non-aléatoire
 	#badExample=[1, 0, 1, 2, 0, 0] # -- FIXED !! probleme etait dans les débuts et fins des sous-tableaux
@@ -12,19 +22,26 @@ def main():
 	#print(majCorrected(badExample))
 	# Construction du tableau aléatoire (taille,valeurMin,valeurMax)
 	# Et on l'affiche
-	tableToCheck=randomTABLE(1000000,0,1000000)
+	tableToCheck=randomTABLE(5,0,10)
 	print(tableToCheck)
 	#print(majCorrected(tableToCheck))
 	# DEBUG
 	# print(Exo(Custom,Custom))
 	
+	print(majCorrected(tableToCheck))
+	
 	# On tri le tableau aléatoire
 	#start=time.time()
-	start=time.time()
+	global benchQs
+	benchQs = BenchMark()
+	
 	quickSortCorrected(tableToCheck)
 	print(tableToCheck)
-	end=time.time()
+	benchQs.stop()
+	
+	print(majCorrected(tableToCheck))
  	
+	
 	# BENCHMARK : FONCTIONS NON CORRIGEES QS
 	# T(1000000)=34s
 	# Avec 1263777 appels à la fonction en récursion
@@ -42,19 +59,7 @@ def main():
 	# T(1000000)=34s
 	# 1264177 appels
 	# Occupe 19Mo
-	
-	
-	# on vérifie s'il est majoritaire sans le trier
-	
-	#print(majoritaire(tableToCheck))
-	global counter
-	print(counter)
-	
-	duration=end-start
-	print(duration)
-	#print(time.clock())
-	
-	
+		
 def swap(table,i,j):
 	temp=table[j]
 	table[j]=table[i]
@@ -81,8 +86,8 @@ def partition(table,debut,fin):
 	return (e, g)
 	
 def qsAux(table,debut,fin):
-	global counter
-	counter += 1
+	#global benchQs
+	checkBench()
 	if (debut < fin):
 		(e,g) = partition(table,debut,fin)
 		qsAux(table,debut,e)
@@ -115,9 +120,7 @@ def majCorrected(table):
 	return majAux(table,0,len(table),len(table) // 2 +1)
 	
 def majAux(table,debut,fin,tailleRef):
-	#if debut < fin:
-		print(tailleRef)
-
+		# print(tailleRef)
 		(e,g)=partition(table,debut,fin)
 
 		if g-e >= tailleRef:
