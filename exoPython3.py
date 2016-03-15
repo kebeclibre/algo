@@ -5,7 +5,7 @@ import time
 from compteurdebug import BenchMark
 
 bench=1
-DEBUG=0
+DEBUG=1
 benches=[]
 
 def debug(message):
@@ -62,12 +62,12 @@ def main():
 	# On tri le tableau aléatoire
 	#start=time.time()
 	
-	toBench(1,0)	
+	#toBench(1,0)	
 	quickSortCorrected(tableToCheck)
 	print(tableToCheck)
-	toBench(0,0)
-	
-	print(majCorrected(tableToCheck))
+	#toBench(0,0)
+	print(majSorted(tableToCheck))
+	#print(majCorrected(tableToCheck))
  	
 	
 	# BENCHMARK : FONCTIONS NON CORRIGEES QS
@@ -114,7 +114,7 @@ def partition(table,debut,fin):
 	return (e, g)
 	
 def qsAux(table,debut,fin):
-	toBench(2,0)
+	#toBench(2,0)
 	if (debut < fin):
 		(e,g) = partition(table,debut,fin)
 		qsAux(table,debut,e)
@@ -282,5 +282,32 @@ def quickSortCustom(TABLE):
 	else:
 		# Si le sous-tableau est de type None (ou vide) on renvoi un tableau vide
 		return []
+		
+def majSorted(table):
+	marching=True
+	sizeCumul=1
+	sizeCurrent=1
+	compare=table[0]
+	i=0
+	halfSize=len(table) // 2 +1
+	
+	while marching or sizeCumul <= halfSize:
+		if table[sizeCumul] == compare:
+			debug("equal")
+			debug(table[sizeCumul])
+			marching=True
+			sizeCurrent += 1
+			if sizeCurrent >= halfSize:
+				return (True, table[sizeCumul])
+				break
+			sizeCumul += 1
+		elif table[sizeCumul] != compare:
+			compare = table[sizeCumul]
+			marching=False
+			sizeCumul += 1
+			sizeCurrent = 1
+	
+	return (False,False)
+	
 		
 main()
