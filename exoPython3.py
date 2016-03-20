@@ -5,6 +5,7 @@ import time
 from compteurdebug import BenchMark
 from kieme import kieme
 from qsMaj import quickSortCorrected, majCorrected
+from fusionSort import fusionSort
 
 def main():	
 	# Un tableau connu non-aléatoire
@@ -15,20 +16,22 @@ def main():
 	#print(majCorrected(badExample))
 	# Construction du tableau aléatoire (taille,valeurMin,valeurMax)
 	# Et on l'affiche
-	tableToCheck=randomTABLE(11,0,10)
+	tableToCheck=randomTABLE(4,0,10)
 	print(tableToCheck)
 	#print(majCorrected(tableToCheck))
 	# DEBUG
 	# print(Exo(Custom,Custom))
+	mergeSorted=fusionSort(tableToCheck)
+	print(mergeSorted)
 	
 	#print(majCorrected(tableToCheck))
-	print(kieme(tableToCheck,12))
+	#print(kieme(tableToCheck,6))
 	# On tri le tableau aléatoire
 	#start=time.time()
 	
 	#toBench(1,0)	
-	quickSortCorrected(tableToCheck)
-	print(tableToCheck)
+	#quickSortCorrected(tableToCheck)
+	#print(tableToCheck)
 	#toBench(0,0)
 	#print(majSorted(tableToCheck))
 	#print(majCorrected(tableToCheck))
