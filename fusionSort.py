@@ -2,70 +2,63 @@ from qsMaj import swap
 from implBench import debug
 
 
+
 def fusionSort(table):
-	fusionAux(table,0,len(table))
+	return fuFinal(table)
+	#return fusionAux(table,0,len(table))
 	#fusionSortAux(table,0,len(table))
+
 	
-def fusionAux(table,debut,fin):
-	if fin-debut >= 2:
-		left=fusionAux(table,debut,fin // 2)
-		right=fusionAux(table,fin // 2+1,fin)
+def fuFinal(table):
+	if len(table) > 1:
+		left=fuFinal(table[:len(table)//2])
+		right=fuFinal(table[len(table)//2:])
 		return merge(left,right)
+	elif len(table) ==1:
+		return table
 	else:
 		return []
 		
-		
-	
-def fusionSortStableAttempt(table,debut,fin):
-	if (debut < fin):
-		if fin-debut > 2:
-			fusionSortStableAttempt(table,debut,fin // 2)
-			fusionSortStableAttempt(table,fin // 2,fin)
-			mergeOnPlace(table,debut,fin)
-		elif fin-debut == 2:
-			if table[debut] > table[fin-1]:
-				swap(table,debut,fin-1)
-	#elif len(table) == 
-		
+
+def fusionAux(table,debut,fin): # DEPRECATED
+	if fin-debut > 1:
+		debug(debut)
+		debug(fin)
+		debug(fin//2)
+		left=table[0:len(table)//2]
+		right=table[len(table)//2:len(table)]
+		leftAux=fusionAux(left,0,len(left))
+		rightAux=fusionAux(right,0,len(right))
+		debug(left)
+		debug(right)
+		return merge(left,right)
+
+		#return merge(fusionAux(table,debut,fin // 2),fusionAux(table,fin // 2,fin))
+	elif fin-debut ==1:
+		return merge(table,[])
+	else:
+		return []
 		
 	
 def merge(table1,table2):
-	if len(table1) == 0:
+	if ( len(table1) == 0 and len(table2) == 0 ):
+		return []
+	elif len(table1) == 0:
 		return table2
 	elif len(table2) == 0:
 		return table1
-	elif ( len(table1) == 0 and len(table2) == 0 ):
-		return []
 	else:
 		i=0
-		j=len(table1)
-		lenTable2=len(table2)
-		table1.append(table2)
-		while i < len(table1) and j < lenTable2:
-			if table1[i] <= table1[j]:
-				swap(table1,i+1,j)
-				j += 1
-			elif table1[i] > table1[j]:
-				swap(table1,i,j)
+		j=0
+		tableMerged=[]
+		while i < len(table1) and j < len(table2):
+			if table1[i] <= table2[j]:
+				tableMerged.append(table1[i])
 				i += 1
-		return table1
-		
-def mergeOnPlace(table,debut,fin):
-	lenPortion=fin-debut
-	i=debut
-	halfPortion=lenPortion // 2
-	j=halfPortion
-	if lenPortion > 1:
-		while i < halfPortion and j < lenPortion:
-			debug(i)
-			debug(table[i])
-			debug(j)
-		
-			debug(table[j])
-		
-			if table[i] <= table[j]:
-				swap(table,i+1,j)
+			else:
+				tableMerged.append(table2[j])
 				j += 1
-			elif table[i] > table[j]:
-				swap(table,i,j)
-				i += 1
+				
+		tableMerged.extend(table1[i:])
+		tableMerged.extend(table2[j:])
+		return tableMerged
